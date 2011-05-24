@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+
+{% block maincontent %}
+<div class="right"><a href="{% url projects.views.add_project %}" class="add button">New Project</a></div>
+
+<div style="float: right; width: 36%;">
+    <h4>Important Tasks</h4>
+    {% if important_tasks %}
+    <table class="full">
+    {% for task in important_tasks %}
+        <tr><td>{{ task.due_date|timeuntil }}</td><td><a href="{% url projects.views.edit_task project_id=task.project.id task_id=task.id %}">{{ task.project.name }}: {{ task.name }}</a></td></tr>
+    {% endfor %}
+    </table>
+    {% else %}
+    There are no tasks at the moment.
+    {% endif %}
+</div>
+
+<div style="width: 63%;">
+    <table class="drilldown">
+    <tr><th colspan="4" style="padding: 0;"><h4>My projects</h4></th></tr>
+    {% if projects %}
+        <tr><th>Name</th><th>% Completed</th><th>% Health</th><th>Next task due in</th></tr>
+        {% for project in projects %}
+        {% if not project.is_completed %}
+        <tr>
+            <td class="neutral"><a href="{% url projects.views.show_project project_id=project.id %}">{{ project.name }}</a>{{task__completed__max}}</td>
+            <td class="{{ project.completed_description }}">{{ project.completed }}%</td>
+            <td class="{{ project.health_description }}">{{ project.health }}%</td>
+            <td class="neutral">
+                {% if project.next_due_date %}
+                {{ project.next_due_date|timeuntil }}
+                {% else %}N/A{% endif %}
+            </td>
+        </tr>
+        {% endif %}
+        {% endfor %}
+    {% else %}
+    <tr><td colspan="4">There are no projects at the moment.</td></tr>
+    {% endif %}
+
+    <tr><th colspan="4" style="padding: 0;"><h4>Projects assigned to me</h4></th></tr>
+    {% if assigned_projects %}
+        <tr><th>Name</th><th>% Completed</th><th>% Health</th><th>Next task due in</th></tr>
+        {% for project in assigned_projects %}
+        {% if not project.is_completed %}
+        <tr>
+            <td class="neutral"><a href="{% url projects.views.show_project project_id=project.id %}">{{ project.name }}</a></td>
+            <td class="{{ project.completed_description }}">{{ project.completed }}%</td>
+            <td class="{{ project.health_description }}">{{ project.health }}%</td>
+            <td class="neutral">
+                {% if project.next_due_date %}
+                {{ project.next_due_date|timeuntil }}
+                {% else %}N/A{% endif %}
+            </td>
+        </tr>
+        {% endif %}
+        {% endfor %}
+    {% else %}
+    <tr><td colspan="4">There are no assigned projects at the moment.</td></tr>
+    {% endif %}
+    {% if projects %}
+        <tr><th colspan="4" style="padding: 0;"><h4>Completed projects</h4></th></tr>
+        {% for project in projects %}
+        {% if project.is_completed %}
+        <tr>
+            <td class="neutral"><a href="{% url projects.views.show_project project_id=project.id %}">{{ project.name }}</a>{{task__completed__max}}</td>
+            <td class="{{ project.completed_description }}">{{ project.completed }}%</td>
+            <td class="{{ project.health_description }}">{{ project.health }}%</td>
+            <td class="neutral">
+                {% if project.next_due_date %}
+                {{ project.next_due_date|timeuntil }}
+                {% else %}N/A{% endif %}
+            </td>
+        </tr>
+        {% endif %}
+        {% endfor %}
+    {% endif %}
+    {% if assigned_projects %}
+        {% for project in assigned_projects %}
+        {% if project.is_completed %}
+        <tr>
+            <td class="neutral"><a href="{% url projects.views.show_project project_id=project.id %}">{{ project.name }}</a></td>
+            <td class="{{ project.completed_description }}">{{ project.completed }}%</td>
+            <td class="{{ project.health_description }}">{{ project.health }}%</td>
+            <td class="neutral">
+                {% if project.next_due_date %}
+                {{ project.next_due_date|timeuntil }}
+                {% else %}N/A{% endif %}
+            </td>
+        </tr>
+        {% endif %}
+        {% endfor %}
+    {% endif %}
+    </table>
+</div>
+
+<div style="clear: both;"></div>
+{% endblock %}

@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block maincontent %}
+{% if form.errors %}<p class="error">{{ form.errors }}</p>{% endif %}
+<form method="post" action="">
+    {% csrf_token %}
+<table class="full">
+    {{ form.as_table }}
+    <tr>
+        <td>&nbsp;</td>
+        <td class="right"><button type="submit">Submit</button></td>
+    </tr>
+</table>
+</form>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+       $("#id_due_date").addClass("datepicker").datePicker({clickInput:true,startDate:"1900-01-01"});
+    });
+</script>
+{% endblock %}

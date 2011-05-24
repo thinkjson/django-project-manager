@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block maincontent %}
+    {% if message %}
+    <p>{{ message|safe }}</p>
+    {% else %}
+	<p>There was an error with your request. Please notify your administrator.</p>
+    {% endif %}
+
+    {% if request.user.is_superuser %}
+    {{ trace|safe }}
+    {% endif %}
+{% endblock %}

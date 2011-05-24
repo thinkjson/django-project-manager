@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% load markup %}
+
+{% block head %}
+<style type="text/css">
+#tasks a { color: #000; }
+</style>
+{% endblock %}
+
+{% block maincontent %}
+<p>
+    <b>Team:</b> {{ team }}<br />
+    <b>Description:</b> {{ project.description|urlize|linebreaksbr }}
+</p>
+
+{% if authorized %}<div class="right">
+    <a href="{% url projects.views.edit_task project_id=project.id %}" class="add button">New Task</a>
+    <a href="{% url projects.views.add_project project_id=project.id %}" class="edit button">Edit Project</a>
+    <a href="{% url projects.views.delete_project project_id=project.id %}" class="delete button">Delete Project</a>
+</div>{% endif %}
+
+{% if tasks %}
+    <table class="drilldown" id="tasks" style="font-size: 80%;">
+        <tr><th colspan="4"><h4>Critical flow tasks</h4></th></tr>
+        <tr><th>Name</th><th>Description</th><th>Assigned to</th><th>Due</th></tr>
+        {% for task in tasks %}
+        {% if task.due_date %}
+        <tr>
+            <td class="{{task.coding}}">
+                {% if authorized %}<a href="{% url projects.views.edit_task project_id=project.id task_id=task.id %}">{% endif %}
+                    {{ task.name }}
+                {% if authorized %}</a>{% endif %}
+            </td>
+            <td class="{{task.coding}}">{{ task.description|urlize|linebreaksbr|truncatewords:"50" }}</td>
+            <td class="{{task.coding}}">{% for person in task.assigned_to.all %}
+                    {{ person.get_full_name }}<br />
+                {% endfor %}
+            </td>
+            <td class="{{task.coding}}">{{ task.due_date|date:"n/j/Y" }} ({{ task.due_date|timeuntil }})</td>
+        </tr>
+        {% endif %}
+        {% endfor %}
+        <tr><th colspan="4" style="padding-top: 50px;"><h4>Non-critical flow tasks</h4></th></tr>
+        <tr><th>Name</th><th>Description</th><th>Assigned to</th><th>Due</th></tr>
+        {% for task in tasks %}
+        {% if not task.due_date %}
+        <tr>
+            <td class="{{task.coding}}">
+                {% if authorized %}<a href="{% url projects.views.edit_task project_id=project.id task_id=task.id %}">{% endif %}
+                    {{ task.name }}
+                {% if authorized %}</a>{% endif %}
+            </td>
+            <td class="{{task.coding}}">{{ task.description|urlize|linebreaksbr|truncatewords:"50" }}</td>
+            <td class="{{task.coding}}">{% for person in task.assigned_to.all %}
+                    {{ person.get_full_name }}<br />
+                {% endfor %}
+            </td>
+            <td class="{{task.coding}}">N/A</td>
+        </tr>
+        {% endif %}
+        {% endfor %}
+    </table>
+{% endif %}
+
+{% endblock %}

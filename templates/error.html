@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+
+{% block maincontent %}
+	{% if message %}
+		<p>{{ message }}</p>
+	{% else %}
+		<p>There was an undefined error with your request.</p>
+	{% endif %}
+{% endblock %}

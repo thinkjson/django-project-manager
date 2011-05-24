@@ -1,0 +1,35 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+    <title>Django Project Manager DEMO{% if title %} - {{ title }}{% endif %}</title>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+    <link rel="shortcut icon" href="/static/favicon.ico" />
+    <script type='text/javascript' src='https://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js'></script>
+	{% block head %}{% endblock %}
+	<link rel="stylesheet" href="{{ MEDIA_URL }}css/styles.css" />
+</head>
+
+{% load i18n %}
+
+<body>
+	<div id='container'>
+        <div id='header'>
+			<div id='title'>Django Project Manager</div>
+		</div>
+		
+        <div id='maincontent'>
+            {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+            {% if title %}<h2>{{ title }}</h2>{% endif %}
+
+            <div id="content">{% block maincontent %}{% endblock %}</div>
+        </div>
+    </div>
+</body>
+</html>
